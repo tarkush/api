@@ -43,7 +43,6 @@ paths:
       tags:
         - Transports
       summary: Get Transport by transportId id
-      operationId: Transports_GetTransports
       consumes: []
       produces:
         - application/json
