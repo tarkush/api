@@ -17,7 +17,7 @@ externalDocs:
     description: 'Find out more on the SLB WIKI'
     url: 'https://wiki.slb.com/'
 schemes:
-  - https
+    - https
 security:
     -
         APIKeyHeader: []
@@ -36,17 +36,14 @@ tags:
 consumes:
 - application/json
 produces:
-- application/json      
+- application/json    
 paths:
   /{id}:
     get:
       tags:
         - Transports
       summary: Get Transport by transportId id
-      consumes: []
-      produces:
-        - application/json
-        - text/json
+      consumes: [application/json]
       parameters:
         - name: id
           in: path
@@ -89,14 +86,10 @@ paths:
           format: date-time
       responses:
         '200':
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/FLM.Services.TransportService.Model.Transport.Transport'
-      deprecated: false
+          description: Success          
+          headers: {}                
 definitions:
-  FLM.Services.TransportService.Model.Transport.Transport:
+  Transport:
     type: object
     properties:
       type:
