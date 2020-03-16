@@ -1,0 +1,302 @@
+swagger: '2.0'
+info:
+  title: FLM Jobs
+  description: >-
+    Create a job in the FLM (Field Logistic Module) system. The data exposed in the API is classified as
+    _Schlumberger Private_. Download [Postman collection and environments](https://dev.azure.com/slb-it/es-delivery-platform/_git/FLM_Jobs?path=%2FPostman%20Collection&version=GBmaster) for testing.
+  version: 1.0.0
+  contact:
+    name: FLM Support
+    email: flmsupport@slb.com
+  license:
+    name: Schlumberger proprietary
+    url: 'http://www.slb.com'
+host: 'apigateway.evd.it.slb.com'
+basePath: /market-to-cash
+externalDocs:
+    description: 'Find out more on the SLB WIKI'
+    url: 'https://wiki.slb.com/'
+schemes:
+    - https
+security:
+    -
+        APIKeyHeader: []
+securityDefinitions:
+    APIKeyHeader:
+        type: apiKey
+        name: x-apikey
+        in: header    
+tags:
+    -
+        name: 'Jobs'
+        description: 'API covers flm jobs'
+    -
+        name: Jobscurrencies
+        description: 'API covers flm jobs'
+consumes:
+- application/json
+produces:
+- application/json    
+paths:
+  /{id}:
+    post:    
+      tags:
+        - Jobs
+      summary: Submit a job in FLM (Field Logistics Module) system.      
+      consumes: [application/json]
+      parameters:
+        - name: id
+          in: path
+          description: The unique ID for the job
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success          
+          headers: {}                
+definitions:
+    Job:
+      type: object
+      description: "A job."
+      properties:
+        DurationInfo:
+          $ref: '#/definitions/DurationInfo'
+        JobStatus:
+          $ref: '#/definitions/Info'
+        Probability:
+          type: string
+          description: "Job probability from iDistrict"
+        JobId:
+          type: string
+          description: "Unique job ID determined by any external system"
+        SapProjectNumber:
+          type: string
+          description: "SAP Project number for job"
+        JobWbsNo:
+          type: string
+          description: "WBS number for job. iDistrict jobs have a unique format from other systems."
+        SegmentInfo:
+          $ref: '#/definitions/Info'
+        SubSegmentInfo:
+          $ref: '#/definitions/Info'
+        OpsLocationInfo:
+          $ref: '#/definitions/Info'
+        CustomerInfo:
+          $ref: '#/definitions/CustomerInfo'
+        WellInfo:
+          $ref: '#/definitions/Well'
+        RigInfo:
+          $ref: '#/definitions/Data'
+        PadInfo:
+          $ref: '#/definitions/Data'
+        TimeZoneInfo:
+          $ref: '#/definitions/TimeZone'
+        RiskProfileValue:
+          type: string
+          description: "Risk profile value"
+        SourceApplicationId:
+          type: string
+          description: "Unique source application ID"
+        SourceJobId:
+          type: string
+          description: "Unique source job ID"
+        FieldInfo:
+          $ref: '#/definitions/Data'
+        CountryInfo:
+          $ref: '#/definitions/Info'
+        IsDummyJob:
+          type: boolean
+          description: "True if the job is a dummy job. False if otherwise."
+        IsMultiShift:
+          type: boolean
+          description: "True if the crew/s work multiple shifts. False if otherwise."
+        IsRetainerJob:
+          type: boolean
+          description: "True if the job is a retainer job. False if otherwise."
+        ExtJobReferenceNumber:
+          type: string
+          description: "External job reference number"
+        ReferenceData:
+          $ref: '#/definitions/Reference'
+        ShipToPartners:
+          $ref: '#/definitions/Info'
+        SourceAuditInfo:
+          $ref: '#/definitions/Audit'
+        UnitSystem:
+          type: string
+          description: "Unit system"
+        Wells:
+          type: array
+          items:
+            $ref: '#/definitions/Well'
+        CreatedDate:
+          type: string
+          format: date-time
+          description: "Date and time the job was created in FLM"
+        CreatedBy:
+          type: string
+          description: "Alias for the person who created the job in FLM"
+        LastModifiedDate:
+          type: string
+          format: date-time
+          description: "Date and time the job was last updated"
+        LastModifiedBy:
+          type: string
+          description: "Alias for the person who created the job"
+        Id:
+          type: string
+          pattern: '^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$'
+          description: "Unique GUID for the job"
+    DurationInfo:
+      type: object
+      description: "Start and end dates for a job as UTC including seconds"
+      properties:
+        StartDate:
+          type: string
+          format: date-time
+          description: "The start date and time for a job as UTC including seconds"
+        EndDate:
+          type: string
+          format: date-time
+          description: "The end date and time for a job as UTC including seconds"
+      required:
+        - StartDate
+        - EndDate
+    Data:
+      type: object
+      description: "Details about an object"
+      properties:
+        Id:
+          type: string
+          description: "Unique ID"
+        Name:
+          type: string
+          description: "Name"
+      required:
+        - Id
+        - Name
+    Info:
+      type: object
+      description: "Details about an object provided by iDistrict"
+      properties:
+        Code:
+          type: string
+          description: "Code"
+        Name:
+          type: string
+          description: "Name"
+      required:
+        - Code
+        - Name
+    TimeZone:
+      type: object
+      description: "Details about the job's time zone"
+      properties:
+        Code:
+          type: string
+          description: "Timezone GMT offset, name, and description i.e. (GMT-06:00) Central Time (US & Canada)"
+        Description:
+          type: string
+          description: "Full name of the timezone"
+      required:
+        - Code
+        - Description
+    CustomerInfo:
+      type: object
+      description: "Details about the job's customer from iDistrict"
+      properties:
+        Id:
+          type: string
+          description: "Unique ID"
+        Name:
+          type: string
+          description: "Customer name"
+        CustomerAccountId:
+          type: string
+          description: "Customer account ID"
+        CustomerAgreementName:
+          type: string
+          description: "Customer agreement name"
+        ParentCustomerId:
+          type: string
+          description: "Unique parent customer ID"
+        ParentCustomerName:
+          type: string
+          description: "Unique parent customer name"
+      required:
+        - Id
+        - Name
+        - CustomerAccountId
+        - CustomerAgreementName
+    Reference:
+      type: object
+      description: "Reference data for external systems"
+      properties:
+        FdpId:
+          type: string
+          description: "Unique ID for an opsdistrict"
+      required:
+        - FdpId
+    Audit:
+      type: object
+      description: "Meta data useful for auditing"
+      properties:
+        CreatedDate:
+          type: string
+          format: date-time
+          description: "Date and time the job was created in FLM"
+        CreatedBy:
+          type: string
+          description: "Alias for the person who created the job in FLM"
+        LastModifiedDate:
+          type: string
+          format: date-time
+          description: "Date and time the job was last updated"
+        LastModifiedBy:
+          type: string
+          description: "Alias for the person who created the job"
+      required:
+        - CreatedDate
+        - CreatedBy
+        - LastModifiedDate
+        - LastModifiedBy
+    Well:
+      type: object
+      description: "A well on a job site"
+      properties:
+        Id:
+          type: string
+          description: "Unique ID"
+        Name:
+          type: string
+          description: "Unique name from iDistrict"
+        Number:
+          type: string
+          description: "Unique number from iDistrict"
+        MasterNo:
+          type: string
+          description: "Mastered ID number from iDistrict"
+        Latitude:
+          type: string
+          description: "Geographical latitude from iDistrict"
+        Longitude:
+          type: string
+          description: "Geographical longitude from iDistrict"
+        Country:
+          type: string
+          description: "Country for the well's location from iDistrict"
+        State:
+          type: string
+          description: "State for the well's location from iDistrict"
+        APIUWI:
+          type: string
+          description: "APIUWI"
+        WellWbsNo:
+          type: string
+          description: "WBS number from SAP"
+      required:
+        - Id
+        - Name
+        - Number
+        - MasterNo
+  
