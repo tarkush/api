@@ -1,0 +1,1207 @@
+swagger: '2.0'
+info:
+  version: v1
+  title: Transport
+  description: This is the Transport Service External.
+host: service.flm.qa.slb.com
+basePath: /transportv2
+schemes:
+  - https
+paths:
+  '/api/Transports/{id}':
+    get:
+      tags:
+        - Transports
+      summary: Get Transport by transportId id
+      operationId: GetTransports
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+        - name: packingGroupId
+          in: query
+          description: packingGroupId
+          required: false
+          type: string
+          default: ''
+        - name: status
+          in: query
+          description: status
+          required: false
+          type: string
+          default: ''
+        - name: offset
+          in: query
+          description: offset
+          required: false
+          type: integer
+          format: int32
+          default: 0
+        - name: length
+          in: query
+          description: length
+          required: false
+          type: integer
+          format: int32
+          default: 2000
+        - name: fromDeliverydate
+          in: query
+          description: From Deliverydate
+          required: false
+          type: string
+          format: date-time
+        - name: toDeliveryDate
+          in: query
+          description: To DeliveryDate
+          required: false
+          type: string
+          format: date-time
+      responses:
+        '200':
+          description: Success
+          schema:
+            uniqueItems: false
+            type: array
+            items:
+              $ref: '#/definitions/FLM.Services.TransportService.Model.Transport.Transport'
+        '400':
+          description: Bad Request
+  '/api/Transports/{id}/status':
+    post:
+      tags:
+        - Transports
+      summary: Update Status for Transport Requests
+      operationId: UpdateTransportStatus
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - application/json
+      parameters:
+        - name: transport
+          in: body
+          description: Transport details
+          required: false
+          schema:
+            $ref: '#/definitions/FLM.Services.ApplicationCommon.Dto.Transport.TransportShipmentRequestDto'
+        - name: id
+          in: path
+          description: Transport ID
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: boolean
+        '400':
+          description: Bad Request
+  '/api/Transports/handlingunits/{id}/status':
+    post:
+      tags:
+        - Transports
+      summary: Method to update handlingunit status
+      operationId: UpdateHandlingUnitStatus
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: status
+          in: query
+          description: ''
+          required: false
+          type: string
+        - name: id
+          in: path
+          description: ''
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: boolean
+        '400':
+          description: Bad Request
+  /api/Transports/handlingunits/copy:
+    post:
+      tags:
+        - Transports
+      summary: Save bulkcopy handlingunits
+      operationId: CopyHandlingUnits
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - application/json
+      parameters:
+        - name: copyHuDto
+          in: body
+          description: ''
+          required: false
+          schema:
+            $ref: '#/definitions/FLM.Services.ApplicationCommon.Dto.CopyHuDto'
+      responses:
+        '200':
+          description: Success
+          schema:
+            uniqueItems: false
+            type: array
+            items:
+              $ref: '#/definitions/FLM.Services.TransportService.Model.HandlingUnit.HandlingUnit'
+        '400':
+          description: Bad Request
+  /api/Transports/handlingunits:
+    post:
+      tags:
+        - Transports
+      summary: Create new handlingunit
+      operationId: CreateHandlingUnit
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - application/json
+      parameters:
+        - name: handlingUnit
+          in: body
+          description: Handling Unit
+          required: false
+          schema:
+            $ref: '#/definitions/FLM.Services.TransportService.Model.HandlingUnit.HandlingUnit'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/FLM.Services.TransportService.Model.HandlingUnit.HandlingUnit'
+        '400':
+          description: Bad Request
+definitions:
+  FLM.Services.TransportService.Model.Transport.Transport:
+    type: object
+    properties:
+      type:
+        type: string
+      attributes:
+        $ref: '#/definitions/FLM.Services.TransportService.Model.Transport.Attributes'
+      relationships:
+        $ref: '#/definitions/FLM.Services.TransportService.Model.Transport.Relationships'
+      CreatedDate:
+        format: date-time
+        type: string
+      CreatedBy:
+        type: string
+      LastModifiedDate:
+        format: date-time
+        type: string
+      LastModifiedBy:
+        type: string
+      Id:
+        type: string
+  FLM.Services.TransportService.Model.Transport.Attributes:
+    type: object
+    properties:
+      TransportId:
+        type: string
+        readOnly: true
+      ParentTransportId:
+        type: string
+        readOnly: true
+      Status:
+        type: string
+        readOnly: true
+      Action:
+        type: string
+        readOnly: true
+      ActionBy:
+        type: string
+        readOnly: true
+      ActionDate:
+        format: date-time
+        type: string
+        readOnly: true
+      PackingGroupID:
+        type: string
+        readOnly: true
+      VehicleDetail:
+        $ref: '#/definitions/FLM.Services.TransportService.Model.Transport.VehicleDetail'
+        readOnly: true
+      PreferredCarrier:
+        $ref: '#/definitions/FLM.Services.TransportService.Model.Transport.PreferredCarrier'
+        readOnly: true
+      Logistics:
+        type: string
+        readOnly: true
+      RollingType:
+        type: string
+        readOnly: true
+      LogisticsType:
+        type: string
+        readOnly: true
+      SLBLogistics:
+        $ref: '#/definitions/FLM.Services.TransportService.Model.Common.SLBLogistics'
+        readOnly: true
+      CostCenter:
+        $ref: '#/definitions/FLM.Services.TransportService.Model.Common.CostCenter'
+        readOnly: true
+      Crew:
+        type: string
+        readOnly: true
+      PONumber:
+        type: string
+        readOnly: true
+      ModeOfTransport:
+        type: string
+        readOnly: true
+      DrivingInstructions:
+        type: string
+        readOnly: true
+      HotShot:
+        type: boolean
+        readOnly: true
+      FootPrintNumber:
+        type: string
+        readOnly: true
+      IsFirstLeg:
+        type: boolean
+        readOnly: true
+      IsAttachmentAvailable:
+        type: boolean
+      IsAttachmentProcessed:
+        type: boolean
+      HashCode:
+        type: string
+      ShipWith:
+        type: string
+        readOnly: true
+      TransportDates:
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/FLM.Services.TransportService.Model.Transport.TransportDates'
+        readOnly: true
+      Materials:
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/FLM.Services.TransportService.Model.Transport.Material'
+      AlternateShippingPoint:
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/FLM.Services.TransportService.Model.Common.AlternateShippingPoint'
+        readOnly: true
+      HandlingUnit:
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/FLM.Services.TransportService.Model.Transport.HandlingUnit'
+        readOnly: true
+      ItemEtag:
+        type: string
+        readOnly: true
+      AppointmentSchedule:
+        $ref: '#/definitions/FLM.Services.TransportService.Model.Transport.AppointmentSchedule'
+        readOnly: true
+  FLM.Services.TransportService.Model.Transport.Relationships:
+    type: object
+    properties:
+      shippingrequest:
+        $ref: '#/definitions/FLM.Services.TransportService.Model.Transport.Shippingrequest'
+        readOnly: true
+      mobilization:
+        $ref: '#/definitions/FLM.Services.TransportService.Model.Transport.MobilizationRequest'
+        readOnly: true
+      source:
+        $ref: '#/definitions/FLM.Services.TransportService.Model.Transport.Source'
+        readOnly: true
+  FLM.Services.TransportService.Model.Transport.VehicleDetail:
+    type: object
+    properties:
+      Code:
+        type: string
+        readOnly: true
+      Name:
+        type: string
+        readOnly: true
+      Dimensions:
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/FLM.Services.TransportService.Model.Transport.Dimension'
+        readOnly: true
+  FLM.Services.TransportService.Model.Transport.PreferredCarrier:
+    type: object
+    properties:
+      Code:
+        type: string
+        readOnly: true
+      Description:
+        type: string
+        readOnly: true
+  FLM.Services.TransportService.Model.Common.SLBLogistics:
+    type: object
+    properties:
+      SLBpaid:
+        type: string
+        readOnly: true
+      Rechargeable:
+        type: string
+        readOnly: true
+  FLM.Services.TransportService.Model.Common.CostCenter:
+    type: object
+    properties:
+      Code:
+        type: string
+        readOnly: true
+      Description:
+        type: string
+        readOnly: true
+      ProductLine:
+        type: string
+        readOnly: true
+      SubProductLine:
+        type: string
+        readOnly: true
+      GeoMarket:
+        type: string
+        readOnly: true
+      SubGeoMarket:
+        type: string
+        readOnly: true
+      CompanyCode:
+        type: string
+        readOnly: true
+  FLM.Services.TransportService.Model.Transport.TransportDates:
+    type: object
+    properties:
+      Type:
+        type: string
+        readOnly: true
+      Pickup:
+        format: date-time
+        type: string
+        readOnly: true
+      Delivery:
+        format: date-time
+        type: string
+        readOnly: true
+  FLM.Services.TransportService.Model.Transport.Material:
+    type: object
+    properties:
+      SRMaterialLocalId:
+        type: string
+        readOnly: true
+      ShippingRequestId:
+        type: string
+        readOnly: true
+      Quantity:
+        format: double
+        type: number
+        readOnly: true
+      ExternalId:
+        format: int32
+        type: integer
+        readOnly: true
+      MaterialNumber:
+        type: string
+        readOnly: true
+      MaterialName:
+        type: string
+        readOnly: true
+      MaterialType:
+        type: string
+        readOnly: true
+      Uom:
+        type: string
+        readOnly: true
+      MaterialId:
+        type: string
+        readOnly: true
+      WeightsDimensions:
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/FLM.Services.TransportService.Model.Transport.WeightsDimension'
+        readOnly: true
+  FLM.Services.TransportService.Model.Common.AlternateShippingPoint:
+    type: object
+    properties:
+      Type:
+        type: string
+        readOnly: true
+      Direction:
+        type: string
+        readOnly: true
+      Id:
+        type: string
+        readOnly: true
+      Number:
+        type: string
+        readOnly: true
+      Name:
+        type: string
+        readOnly: true
+      Description:
+        type: string
+        readOnly: true
+      Address:
+        type: string
+        readOnly: true
+      City:
+        type: string
+        readOnly: true
+      ProvinceCode:
+        type: string
+        readOnly: true
+      PostalCode:
+        type: string
+        readOnly: true
+      Latitude:
+        type: string
+        readOnly: true
+      Longitude:
+        type: string
+        readOnly: true
+      ExternalId:
+        type: string
+        readOnly: true
+  FLM.Services.TransportService.Model.Transport.HandlingUnit:
+    type: object
+    properties:
+      HandlingUnitId:
+        type: string
+        readOnly: true
+      HUType:
+        type: string
+        readOnly: true
+      Name:
+        type: string
+        readOnly: true
+      UoM:
+        type: string
+        readOnly: true
+      Quantity:
+        format: double
+        type: number
+        readOnly: true
+      Stackable:
+        type: boolean
+        readOnly: true
+      HUAttributes:
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/FLM.Services.TransportService.Model.Transport.HUAttribute'
+        readOnly: true
+      HUMaterials:
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/FLM.Services.TransportService.Model.Transport.HUMaterial'
+        readOnly: true
+  FLM.Services.TransportService.Model.Transport.AppointmentSchedule:
+    type: object
+    properties:
+      SourceDate:
+        format: date-time
+        type: string
+        readOnly: true
+      DestinationDate:
+        format: date-time
+        type: string
+        readOnly: true
+  FLM.Services.TransportService.Model.Transport.Shippingrequest:
+    type: object
+    properties:
+      data:
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/FLM.Services.TransportService.Model.Transport.ShippingData'
+        readOnly: true
+  FLM.Services.TransportService.Model.Transport.MobilizationRequest:
+    type: object
+    properties:
+      data:
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/FLM.Services.TransportService.Model.Transport.MobilizationData'
+        readOnly: true
+  FLM.Services.TransportService.Model.Transport.Source:
+    type: object
+    properties:
+      data:
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/FLM.Services.TransportService.Model.Common.SourceData'
+        readOnly: true
+  FLM.Services.TransportService.Model.Transport.Dimension:
+    type: object
+    properties:
+      Type:
+        type: string
+        readOnly: true
+      Value:
+        format: double
+        type: number
+        readOnly: true
+      Unit:
+        type: string
+        readOnly: true
+      OceanUnit:
+        type: string
+        readOnly: true
+  FLM.Services.TransportService.Model.Transport.WeightsDimension:
+    type: object
+    properties:
+      Type:
+        type: string
+        readOnly: true
+      Value:
+        type: string
+        readOnly: true
+      Uom:
+        type: string
+        readOnly: true
+      OceanUnit:
+        type: string
+        readOnly: true
+  FLM.Services.TransportService.Model.Transport.HUAttribute:
+    type: object
+    properties:
+      Type:
+        type: string
+        readOnly: true
+      Value:
+        type: string
+        readOnly: true
+      Uom:
+        type: string
+        readOnly: true
+      DataType:
+        type: string
+        readOnly: true
+      Range:
+        type: string
+        readOnly: true
+      OceanUnit:
+        type: string
+        readOnly: true
+  FLM.Services.TransportService.Model.Transport.HUMaterial:
+    type: object
+    properties:
+      MaterialId:
+        type: string
+        readOnly: true
+      ExternalId:
+        format: int32
+        type: integer
+        readOnly: true
+      MaterialNumber:
+        type: string
+        readOnly: true
+      MaterialName:
+        type: string
+        readOnly: true
+      MaterialType:
+        type: string
+        readOnly: true
+      Uom:
+        type: string
+        readOnly: true
+      ShippingQuantity:
+        type: string
+        readOnly: true
+      ShippingRequestId:
+        type: string
+        readOnly: true
+      Quantity:
+        format: double
+        type: number
+        readOnly: true
+      WeightsDimensions:
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/FLM.Services.TransportService.Model.Transport.WeightsDimension'
+        readOnly: true
+  FLM.Services.TransportService.Model.Transport.ShippingData:
+    type: object
+    properties:
+      ShippingRequestId:
+        type: string
+        readOnly: true
+      DestinationType:
+        type: string
+        readOnly: true
+      PickupDate:
+        format: date-time
+        type: string
+        readOnly: true
+      DeliveryDate:
+        format: date-time
+        type: string
+        readOnly: true
+      Location:
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/FLM.Services.TransportService.Model.Common.Location'
+        readOnly: true
+      AlternateShippingPoint:
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/FLM.Services.TransportService.Model.Common.AlternateShippingPoint'
+        readOnly: true
+      SLBLogistics:
+        $ref: '#/definitions/FLM.Services.TransportService.Model.Common.SLBLogistics'
+        readOnly: true
+      Materials:
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/FLM.Services.TransportService.Model.Shipping.Material'
+        readOnly: true
+      ShippingInstruction:
+        $ref: '#/definitions/FLM.Services.TransportService.Model.Common.ShippingInstruction'
+        readOnly: true
+      Comments:
+        type: string
+        readOnly: true
+      IsExpressRequest:
+        type: boolean
+      ExternalId:
+        type: string
+        readOnly: true
+      AppoinmentSchedule:
+        $ref: '#/definitions/FLM.Services.TransportService.Model.Transport.AppointmentSchedule'
+        readOnly: true
+  FLM.Services.TransportService.Model.Transport.MobilizationData:
+    type: object
+    properties:
+      Type:
+        type: string
+        readOnly: true
+      MobilizationId:
+        type: string
+        readOnly: true
+      PickupDate:
+        format: date-time
+        type: string
+        readOnly: true
+      DeliveryDate:
+        format: date-time
+        type: string
+        readOnly: true
+      Logistics:
+        type: string
+        readOnly: true
+      SLBLogistics:
+        $ref: '#/definitions/FLM.Services.TransportService.Model.Common.SLBLogistics'
+        readOnly: true
+      CostCenter:
+        $ref: '#/definitions/FLM.Services.TransportService.Model.Common.CostCenter'
+        readOnly: true
+      Materials:
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/FLM.Services.TransportService.Model.Mobilization.Material'
+        readOnly: true
+      Equipment:
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/FLM.Services.TransportService.Model.Mobilization.Equipment'
+        readOnly: true
+  FLM.Services.TransportService.Model.Common.SourceData:
+    type: object
+    properties:
+      SourceId:
+        type: string
+        readOnly: true
+      SourceType:
+        type: string
+        readOnly: true
+      SAPProjectNumber:
+        type: string
+        readOnly: true
+      Rig:
+        type: string
+      RigName:
+        type: string
+      Customer:
+        type: string
+      CustomerName:
+        type: string
+      GeoMarket:
+        type: string
+        readOnly: true
+      OpsLocationDetails:
+        $ref: '#/definitions/FLM.Services.TransportService.Model.Common.OpsLocationDetails'
+        readOnly: true
+      Well:
+        $ref: '#/definitions/FLM.Services.TransportService.Model.Common.Well'
+        readOnly: true
+      TimeZoneInfo:
+        $ref: '#/definitions/FLM.Services.TransportService.Model.Common.TimeZoneInfo'
+        readOnly: true
+  FLM.Services.TransportService.Model.Common.Location:
+    type: object
+    properties:
+      Type:
+        type: string
+        readOnly: true
+      Plant:
+        $ref: '#/definitions/FLM.Services.TransportService.Model.Common.Plant'
+        readOnly: true
+      StorageLocation:
+        $ref: '#/definitions/FLM.Services.TransportService.Model.Common.StorageLocation'
+        readOnly: true
+      ShippingPlant:
+        type: string
+        readOnly: true
+  FLM.Services.TransportService.Model.Shipping.Material:
+    type: object
+    properties:
+      SRMaterialLocalId:
+        type: string
+        readOnly: true
+      MaterialId:
+        type: string
+        readOnly: true
+      DestinationJobID:
+        type: string
+        readOnly: true
+      MobilizationId:
+        type: string
+        readOnly: true
+      Quantity:
+        format: int32
+        type: integer
+        readOnly: true
+      ShippingOneStimInfo:
+        $ref: '#/definitions/FLM.Services.TransportService.Model.Common.ShippingOneStimInfo'
+        readOnly: true
+      Comments:
+        type: string
+        readOnly: true
+      MaterialType:
+        type: string
+        readOnly: true
+      DangerousGoods:
+        type: boolean
+        readOnly: true
+      Uom:
+        type: string
+        readOnly: true
+      UNClass:
+        type: string
+        readOnly: true
+      IsCustomerOwnedInventory:
+        type: boolean
+        readOnly: true
+      MaterialNumber:
+        type: string
+        readOnly: true
+      MaterialName:
+        type: string
+        readOnly: true
+      PONumber:
+        type: string
+        readOnly: true
+      POType:
+        type: string
+        readOnly: true
+      WeightsDimensions:
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/FLM.Services.TransportService.Model.Transport.WeightsDimension'
+        readOnly: true
+      JobId:
+        type: string
+        readOnly: true
+  FLM.Services.TransportService.Model.Common.ShippingInstruction:
+    type: object
+    properties:
+      DrivingInstructions:
+        type: string
+        readOnly: true
+      Contacts:
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/FLM.Services.TransportService.Model.Common.Contact'
+        readOnly: true
+  FLM.Services.TransportService.Model.Mobilization.Material:
+    type: object
+    properties:
+      MaterialId:
+        type: string
+        readOnly: true
+      MaterialName:
+        type: string
+        readOnly: true
+      MaterialType:
+        type: string
+        readOnly: true
+      SAPMaterial:
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/FLM.Services.TransportService.Model.Common.SAPMaterial'
+        readOnly: true
+      DangerousGoods:
+        type: boolean
+        readOnly: true
+      Uom:
+        type: string
+        readOnly: true
+      UNClass:
+        type: string
+        readOnly: true
+      IsCustomerOwnedInventory:
+        type: boolean
+        readOnly: true
+      AlternateShippingPoint:
+        $ref: '#/definitions/FLM.Services.TransportService.Model.Common.AlternateShippingPoint'
+        readOnly: true
+  FLM.Services.TransportService.Model.Mobilization.Equipment:
+    type: object
+    properties:
+      EquipmentId:
+        type: string
+        readOnly: true
+      EquipmentNumber:
+        type: string
+        readOnly: true
+      EquipmentName:
+        type: string
+        readOnly: true
+      IsRollingAsset:
+        type: boolean
+        readOnly: true
+      Location:
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/FLM.Services.TransportService.Model.Common.Location'
+        readOnly: true
+      AlternateShippingPoint:
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/FLM.Services.TransportService.Model.Common.AlternateShippingPoint'
+        readOnly: true
+  FLM.Services.TransportService.Model.Common.OpsLocationDetails:
+    type: object
+    properties:
+      OpsLocationCode:
+        type: string
+        readOnly: true
+      OpsLocationName:
+        type: string
+        readOnly: true
+      IsSapDeployed:
+        type: boolean
+        readOnly: true
+      ProductLine:
+        type: string
+        readOnly: true
+      SubProductLine:
+        type: string
+        readOnly: true
+      LegalEntity:
+        type: string
+        readOnly: true
+      LegalEntityName:
+        type: string
+        readOnly: true
+  FLM.Services.TransportService.Model.Common.Well:
+    type: object
+    properties:
+      Id:
+        type: string
+        readOnly: true
+      Name:
+        type: string
+        readOnly: true
+      wellWBSNo:
+        type: string
+        readOnly: true
+  FLM.Services.TransportService.Model.Common.TimeZoneInfo:
+    type: object
+    properties:
+      Code:
+        type: string
+        readOnly: true
+      Description:
+        type: string
+        readOnly: true
+  FLM.Services.TransportService.Model.Common.Plant:
+    type: object
+    properties:
+      Code:
+        type: string
+        readOnly: true
+      Description:
+        type: string
+        readOnly: true
+      CompanyCode:
+        type: string
+        readOnly: true
+  FLM.Services.TransportService.Model.Common.StorageLocation:
+    type: object
+    properties:
+      Code:
+        type: string
+        readOnly: true
+      Description:
+        type: string
+        readOnly: true
+  FLM.Services.TransportService.Model.Common.ShippingOneStimInfo:
+    type: object
+    properties:
+      SourcingStrategy:
+        type: string
+        readOnly: true
+      DeliveryStrategy:
+        type: string
+        readOnly: true
+      PackagingType:
+        type: string
+        readOnly: true
+      Crew:
+        type: string
+        readOnly: true
+      Division:
+        type: string
+        readOnly: true
+      Diversion:
+        type: string
+        readOnly: true
+      Basin:
+        type: string
+        readOnly: true
+      ItemCategory:
+        type: string
+        readOnly: true
+      FootPrintNumber:
+        type: string
+        readOnly: true
+  FLM.Services.TransportService.Model.Common.Contact:
+    type: object
+    properties:
+      Type:
+        type: string
+        readOnly: true
+      Name:
+        type: string
+        readOnly: true
+      Role:
+        type: string
+        readOnly: true
+      PhoneNo:
+        type: string
+        readOnly: true
+      EmailId:
+        type: string
+        readOnly: true
+  FLM.Services.TransportService.Model.Common.SAPMaterial:
+    type: object
+    properties:
+      Type:
+        type: string
+        readOnly: true
+      Value:
+        type: string
+        readOnly: true
+  FLM.Services.ApplicationCommon.Dto.Transport.TransportShipmentRequestDto:
+    type: object
+    properties:
+      TransportNo:
+        type: string
+      Status:
+        type: string
+      Category:
+        type: string
+      Action:
+        type: string
+      ActionBy:
+        type: string
+      ActionDate:
+        format: date-time
+        type: string
+        readOnly: true
+  FLM.Services.ApplicationCommon.Dto.CopyHuDto:
+    type: object
+    properties:
+      SourceHuId:
+        type: string
+      NumberOfCopy:
+        format: int32
+        type: integer
+      IsCopyWithMaterials:
+        type: boolean
+      HashCode:
+        type: string
+  FLM.Services.TransportService.Model.HandlingUnit.HandlingUnit:
+    type: object
+    properties:
+      type:
+        type: string
+      attributes:
+        $ref: '#/definitions/FLM.Services.TransportService.Model.HandlingUnit.Attributes'
+      relationships:
+        $ref: '#/definitions/FLM.Services.TransportService.Model.HandlingUnit.Relationships'
+      CreatedDate:
+        format: date-time
+        type: string
+      CreatedBy:
+        type: string
+      LastModifiedDate:
+        format: date-time
+        type: string
+      LastModifiedBy:
+        type: string
+      Id:
+        type: string
+  FLM.Services.TransportService.Model.HandlingUnit.Attributes:
+    type: object
+    properties:
+      Status:
+        type: string
+        readOnly: true
+      HUType:
+        type: string
+        readOnly: true
+      Name:
+        type: string
+        readOnly: true
+      UoM:
+        type: string
+        readOnly: true
+      Quantity:
+        format: int32
+        type: integer
+        readOnly: true
+      HUAttributes:
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/FLM.Services.TransportService.Model.HandlingUnit.HUAttribute'
+        readOnly: true
+      Stackable:
+        type: boolean
+        readOnly: true
+      Materials:
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/FLM.Services.TransportService.Model.HandlingUnit.Material'
+        readOnly: true
+      PackingGroupId:
+        type: string
+        readOnly: true
+      SourceHU:
+        type: string
+  FLM.Services.TransportService.Model.HandlingUnit.Relationships:
+    type: object
+    properties:
+      shippingrequest:
+        $ref: '#/definitions/FLM.Services.TransportService.Model.HandlingUnit.Shippingrequest'
+        readOnly: true
+      source:
+        $ref: '#/definitions/FLM.Services.TransportService.Model.HandlingUnit.Source'
+        readOnly: true
+  FLM.Services.TransportService.Model.HandlingUnit.HUAttribute:
+    type: object
+    properties:
+      Type:
+        type: string
+        readOnly: true
+      Value:
+        type: string
+        readOnly: true
+      Uom:
+        type: string
+        readOnly: true
+      OceanUnit:
+        type: string
+        readOnly: true
+  FLM.Services.TransportService.Model.HandlingUnit.Material:
+    type: object
+    properties:
+      Id:
+        type: string
+        readOnly: true
+      Number:
+        type: string
+        readOnly: true
+      Name:
+        type: string
+        readOnly: true
+      ShippingRequestId:
+        type: string
+        readOnly: true
+      Quantity:
+        format: double
+        type: number
+        readOnly: true
+      UOM:
+        type: string
+        readOnly: true
+  FLM.Services.TransportService.Model.HandlingUnit.Shippingrequest:
+    type: object
+    properties:
+      data:
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/FLM.Services.TransportService.Model.HandlingUnit.ShippingData'
+        readOnly: true
+  FLM.Services.TransportService.Model.HandlingUnit.Source:
+    type: object
+    properties:
+      data:
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/FLM.Services.TransportService.Model.Common.SourceData'
+        readOnly: true
+  FLM.Services.TransportService.Model.HandlingUnit.ShippingData:
+    type: object
+    properties:
+      ShippingRequestId:
+        type: string
+        readOnly: true
+      MaterialIds:
+        uniqueItems: false
+        type: array
+        items:
+          type: string
+        readOnly: true
+securityDefinitions:
+  Bearer:
+    name: Authorization
+    in: header
+    type: apiKey
+    description: 'OAuth Bearer scheme. Input Example: "Bearer {token}"'
+security:
+  - Bearer: []
