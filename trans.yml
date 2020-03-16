@@ -113,7 +113,7 @@ definitions:
   FLM.Services.TransportService.Model.Transport.Attributes:
     type: object
     properties:
-      TransportId:
+      id:
         type: string
         readOnly: true
       ParentTransportId:
