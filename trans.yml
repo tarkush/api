@@ -44,6 +44,7 @@ paths:
         - Transports
       summary: Get Transport by transportId id
       consumes: [application/json]
+      produces: [application/json]
       parameters:
         - name: id
           in: path
