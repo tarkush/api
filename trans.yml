@@ -41,7 +41,7 @@ paths:
   /{id}:
     post:
       tags:
-        - Transports
+        - Transport
       summary: Get Transport by transportId id
       consumes: [application/json]
       produces: [application/json]
