@@ -39,7 +39,7 @@ produces:
 - application/json    
 paths:
   /{id}:
-    get:
+    post:
       tags:
         - Transports
       summary: Get Transport by transportId id
