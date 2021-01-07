@@ -3024,22 +3024,18 @@ definitions:
                 shipperDetails:
                   type: object
                   properties:
-                    postalAddress:
-                      $ref: >-
-                        #/definitions/SupermodelIoLogisticsExpressAddressCreateShipmentResponse
+                    postalAddress:                      
+                      $ref: "#/definitions/SupermodelIoLogisticsExpressAddressCreateShipmentResponse"                        
                     contactInformation:
-                      $ref: >-
-                        #/definitions/SupermodelIoLogisticsExpressContactCreateShipmentResponse
+                      $ref: "#/definitions/SupermodelIoLogisticsExpressContactCreateShipmentResponse"
                   additionalProperties: false
                 receiverDetails:
                   type: object
                   properties:
                     postalAddress:
-                      $ref: >-
-                        #/definitions/SupermodelIoLogisticsExpressAddressCreateShipmentResponse
+                      $ref: "#/definitions/SupermodelIoLogisticsExpressAddressCreateShipmentResponse"
                     contactInformation:
-                      $ref: >-
-                        #/definitions/SupermodelIoLogisticsExpressContactCreateShipmentResponse
+                      $ref: "#/definitions/SupermodelIoLogisticsExpressContactCreateShipmentResponse"
                   additionalProperties: false
               additionalProperties: false
           additionalProperties: false
@@ -3830,7 +3826,7 @@ definitions:
         items:
           $ref: "#/definitions/SupermodelIoLogisticsExpressAccount"
       specialInstructions:
-        description: >-
+        description: |
           Details special pickup instructions you may wish to send to the DHL
           Courier.
         type: array
@@ -3842,7 +3838,7 @@ definitions:
           maxProperties: 4
           properties:
             value:
-              description: >-
+              description: |
                 Any special instructions user wish to send to the courier for
                 the order pick-up.
               type: string
@@ -3932,7 +3928,7 @@ definitions:
               maxLength: 1
             accounts:
               title: accounts
-              description: >-
+              description: |
                 Please enter all the DHL Express accounts related to this
                 shipment
               type: array
@@ -3941,21 +3937,20 @@ definitions:
                 $ref: "#/definitions/SupermodelIoLogisticsExpressAccount"
             valueAddedServices:
               title: valueAddedServices
-              description: >-
+              description: |
                 This section communicates additional shipping services, such as
                 Insurance (or Shipment Value Protection).
               type: array
               maxItems: 99
               items:
-                $ref: >-
-                  #/definitions/SupermodelIoLogisticsExpressValueAddedServicesRates
+                $ref: "#/definitions/SupermodelIoLogisticsExpressValueAddedServicesRates"
             isCustomsDeclarable:
-              description: >-
+              description: |
                 For customs purposes please advise if your shipment is dutiable
                 (true) or non dutiable (false)
               type: boolean
             declaredValue:
-              description: >-
+              description: |
                 For customs purposes please advise on declared value of the
                 shipment
               type: number
